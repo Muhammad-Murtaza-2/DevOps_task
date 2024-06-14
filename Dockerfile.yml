@@ -1,0 +1,18 @@
+# Use a Linux base image
+FROM ubuntu:latest
+
+# Install necessary dependencies
+RUN apt-get update && \
+    apt-get install -y curl
+
+# Copy the shell script into the container
+COPY save-data.sh /usr/src/app/
+
+# Set the working directory
+WORKDIR /usr/src/app/
+
+# Make the script executable
+RUN chmod +x save-data.sh
+
+# Run the script when the container starts
+CMD ["./save-data.sh"]
