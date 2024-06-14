@@ -1,19 +1,15 @@
 #!/bin/bash
 
-# List of CSV URLs
-csv_urls=(
+csv_urls_array=(
     "https://raw.githubusercontent.com/owid/covid-19-data/master/public/data/owid-covid-data.csv"
-    # Add more URLs as needed
 )
 
-# Function to retrieve data from the internet
-retrieve_data() {
+data_extraction() {
     echo "Data Downloading..."
 
-    # Create data directory if it doesn't exist
     mkdir -p data
 
-    for url in "${csv_urls[@]}"; do
+    for url in "${csv_urls_array[@]}"; do
         {
             curl -o "data/$(basename $url)" "$url"
             echo "Data Downloaded"
@@ -24,24 +20,20 @@ retrieve_data() {
 
 }
 
-# Function to organize data into time-stamped directories
-organize_data() {
+data_processing() {
     timestamp=$(date +%Y-%m-%d_%H-%M-%S)
     mkdir -p "backup/$timestamp"
     mv data/*.csv "backup/$timestamp"
 }
 
-# Function to delete data copies older than 3 days
-delete_old_data() {
+data_deletion() {
     find backup/* -mtime +3 -exec rm {} \;
 }
 
-# Main function to execute the script
 main() {
-    retrieve_data
-    organize_data
-    delete_old_data
+    data_extraction
+    data_processing
+    data_deletion
 }
 
-# Run the main function
 main
